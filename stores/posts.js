@@ -1,7 +1,8 @@
 export const usepostsStore = defineStore('posts', {
     state: () => ({
         posts: [],
-        IsLoading: true
+        IsLoading: true,
+        IsPostOk: false
     }),
     getters: {
     },
@@ -16,6 +17,29 @@ export const usepostsStore = defineStore('posts', {
                 this.IsLoading = false
             } catch(err){
                 console.log('Ошибка при получении постов')
+                return err
+            }
+        },
+        async SEND_DATA_TO_DB(title, descript, id){
+            try {
+                this.IsPostOk = false
+                const config = useRuntimeConfig()
+                const post = await $fetch(`${config.public.Api}`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: title,
+                        body: descript,
+                        userId: id,
+                      }),
+                    headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    },
+                })
+                if(post.id){
+                    this.IsPostOk = true
+                }
+            } catch(err){
+                console.log('Ошибка при отправке поста: ' + err)
                 return err
             }
         }

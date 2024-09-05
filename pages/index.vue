@@ -3,15 +3,19 @@
     <main v-else>
         <section class="main mt-10">
             <div class="container">
-                <h2 class="section__title">Посты</h2>
+                <div class="main__header flex justify-between items-center">
+                    <h2 class="section__title">Посты</h2>
+                    <button 
+                    @click="emits('OpenModalWindow')"
+                    class="main__button text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">Добавить пост</button>
+                </div>
+                
                 <div class="main__block flex flex-col gap-y-2.5 mt-5">
-                    <article class="p-6 bg-white rounded-lg border border-gray-200 shadow-md" 
+                    <PostsVPostCard 
                     v-for="PostItem in postsStore.posts"
                     :key='PostItem.id'
-                    >
-                        <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">{{ PostItem.title }}</h2>
-                        <p class="mb-5 font-light text-gray-500 ">{{PostItem.body}}</p>
-                    </article> 
+                    :PostItem="PostItem"
+                    ></PostsVPostCard>
                 </div>
             </div>
         </section>
@@ -39,6 +43,7 @@ onMounted(() => {
     postsStore.GET_ALL_POSTS_FROM_DB(route.query.page)
 })
 
+const emits = defineEmits(['OpenModalWindow'])
 
 function NavigateToNewPage(NewPage){
     if (NewPage >= 1){
